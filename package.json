@@ -1,0 +1,40 @@
+{
+  "name": "nodejs",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev": "npx tsx src/index.ts",
+    "load-test": "ab -n 5000 -c 500 https://localhost:3002/ > load-test.txt"
+  },
+  "dependencies": {
+    "@types/compression": "^1.8.0",
+    "@types/cookie-parser": "^1.4.8",
+    "body-parser": "^1.20.3",
+    "compression": "^1.8.0",
+    "cookie-parser": "^1.4.7",
+    "csrf": "^3.1.0",
+    "dotenv": "^16.5.0",
+    "drizzle-orm": "^0.44.1",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "glob": "^11.0.1",
+    "helmet": "^8.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.13.2",
+    "pg": "^8.16.0",
+    "pino": "^9.6.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.2",
+    "@types/node": "^22.13.1",
+    "@types/pg": "^8.15.2",
+    "drizzle-kit": "^0.31.1",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.19.4",
+    "vitest": "^3.2.4"
+  }
+}
