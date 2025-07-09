@@ -11,7 +11,8 @@
     },
     "include": [
         "src/**/*.ts",
-        "drizzle.config.ts"
+        "drizzle.config.ts",
+        "test/index.test.ts"
     ],
     "exclude": [
         "node_modules",

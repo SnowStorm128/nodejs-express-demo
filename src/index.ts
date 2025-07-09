@@ -5,9 +5,9 @@ import compression from "compression";
 import express from 'express';
 import helmet from 'helmet';
 import debugPkg from 'debug';
-import pino from "pino";
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
+import winston from 'winston';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { eq, getTableColumns, sql } from 'drizzle-orm';
 import { userTable } from './db/schema';
@@ -17,22 +17,23 @@ const app = express();
 const catRouter = express.Router();
 const port = 3002;
 const db = drizzle(process.env.DATABASE_URL!);
+const logger = winston.createLogger({
+    format: winston.format.combine(
+        winston.format.label({ label: '12' }),
+        winston.format.timestamp(),
+        winston.format.json()
+    ),
+    level: process.env.LOG_LEVEL ? process.env.LOG_LEVEL : 'info',
+    transports: [
+        new winston.transports.Console(),
+        new winston.transports.File({ filename: 'logs/app.log' }),
+    ]
+});
 const mainDebug = debugPkg('app:main');
 const errorDebug = debugPkg('app:error');
 if (!fs.existsSync("logs/")) {
-  fs.mkdirSync("logs/");
+    fs.mkdirSync("logs/");
 }
-const logger = pino({
-    level: process.env.LOG_LEVEL ?? "info"
-}, pino.destination({
-    dest: 'logs/app.log',
-}));
-const fatalLogger = pino({
-    level: process.env.LOG_LEVEL ?? "info"
-}, pino.destination({
-    dest: 'logs/app.log',
-    sync: true,
-}));
 
 // Express
 app.use(cookieParser());
@@ -65,10 +66,7 @@ app.use('/', express.static('public'));
 
 
 app.use((err, req, res, next) => {
-    logger.error({
-        "message": err.message,
-        "stack": err.stack
-    })
+    logger.error(`Route catched error: ${err}`);
     errorDebug(err);
     next(err);
 })
@@ -85,11 +83,10 @@ try {
         mainDebug(`Secure server running on https://localhost:${port}`);
     });
 
+
+
+
 } catch (err) {
-    fatalLogger.fatal({
-        "message": 'Failed to create https server',
-        "stack": err.stack
-    })
     errorDebug('Failed to create https server');
     errorDebug(err);
     process.exit(1);
