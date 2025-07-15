@@ -7,4 +7,3 @@ export default defineConfig({
         url: process.env.DATABASE_URL
     }
 });
-//# sourceMappingURL=drizzle.config.js.map

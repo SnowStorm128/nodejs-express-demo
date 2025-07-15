@@ -1,19 +1,11 @@
 {
-    "compilerOptions": {
-        "module": "ESNext",
-        "moduleResolution": "Bundler",
-        "target": "ES2022",
-        "jsx": "react-jsx",
-        "strictNullChecks": true,
-        "strictFunctionTypes": true,
-        "sourceMap": true,
-        "esModuleInterop": true,
-    },
+    "extends": "@tsconfig/node22/tsconfig.json",
+
     "include": [
         "src/**/*.ts",
         "drizzle.config.ts",
         "test/index.test.ts"
-    ],
+, "src/hello.ts"    ],
     "exclude": [
         "node_modules",
         "**/node_modules/*"

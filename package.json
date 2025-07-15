@@ -7,17 +7,21 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "dev": "npx tsx src/index.ts",
-    "vitest": "npx vitest",
-    "load-test": "ab -n 5000 -c 500 https://localhost:3002/ > load-test.txt"
+    "dev": "tsx watch src/index.ts",
+    "vitest": "vitest",
+    "build": "tsc",
+    "preview": "node src/index.js",
+    "load-test": "ab -n 5000 -c 500 https://localhost:3002/ > load-test2.txt"
   },
   "dependencies": {
     "@types/compression": "^1.8.0",
     "@types/cookie-parser": "^1.4.8",
+    "@types/debug": "^4.1.12",
     "body-parser": "^1.20.3",
     "compression": "^1.8.0",
     "cookie-parser": "^1.4.7",
     "csrf": "^3.1.0",
+    "debug": "^4.4.1",
     "dotenv": "^16.5.0",
     "drizzle-orm": "^0.44.1",
     "ejs": "^3.1.10",
@@ -32,6 +36,7 @@
     "winston": "^3.17.0"
   },
   "devDependencies": {
+    "@tsconfig/node22": "^22.0.2",
     "@types/express": "^5.0.2",
     "@types/node": "^22.13.1",
     "@types/pg": "^8.15.2",
@@ -40,7 +45,8 @@
     "drizzle-kit": "^0.31.1",
     "msw": "^2.10.2",
     "ts-node": "^10.9.2",
-    "tsx": "^4.19.4",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3",
     "vitest": "^3.2.4"
   }
 }

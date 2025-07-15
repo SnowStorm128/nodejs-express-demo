@@ -1,6 +1,8 @@
 import 'dotenv/config';
 import fs from "node:fs";
 import https from "node:https";
+// import child_process from "node:child_process";
+import { Worker } from 'node:worker_threads';
 import compression from "compression";
 import express from 'express';
 import helmet from 'helmet';
@@ -10,7 +12,7 @@ import bodyParser from "body-parser";
 import winston from 'winston';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { eq, getTableColumns, sql } from 'drizzle-orm';
-import { userTable } from './db/schema';
+import { userTable } from './db/schema.js';
 
 // Init variable
 const app = express();
@@ -45,6 +47,21 @@ app.disable('x-powered-by');
 app.set('view engine', 'ejs');
 app.set('views', process.cwd() + '/views');
 
+function runWorker(workerData){
+    return new Promise((resolve, reject) => {
+        const worker = new Worker("./src/hello.js", {
+            workerData
+        });
+        worker.on("message", resolve);
+        worker.on("error", reject);
+        worker.on("exit", code => {
+            if(code !== 0){
+                reject(new Error(`Worker stopped with exit code ${code}`));
+            }
+        })
+    })
+}
+
 // Cat Route
 catRouter.get('/', async (req, res) => {
     const { id, ...rest } = getTableColumns(userTable);
@@ -54,7 +71,33 @@ catRouter.get('/', async (req, res) => {
     }).from(userTable);
     console.log('Getting all users from the db: ', users);
 
-    res.send('');
+    // const ls = child_process.spawn('ls', ['-lh', '/usr']);
+    // ls.stdout.on('data', (data) => {
+    //     res.write(data.toString())
+    // })
+
+    // ls.stdout.on('close', code => {
+    //     res.end();
+    // })
+
+    // child_process.exec('ls -lh /usr', (error, stdout, stderr) => {
+    //     if (error) {
+    //         console.error(`exec error: ${error}`);
+    //         return;
+    //     }
+    //     res.write(stdout);
+    //     res.write(stderr);
+    //     res.end();
+    // })
+
+    // const hello = child_process.fork("src/hello.js");
+    // hello.send({number: 12})
+    // hello.on('message', message => {
+    //     res.end(message);
+    // })
+
+    const worker1 = await runWorker({number: 12}).then((data : {result: number}) => data.result)
+    res.end(worker1);
 })
 app.use('/cat', catRouter);
 

@@ -5,4 +5,3 @@ export const userTable = pgTable("users", {
     age: integer().notNull(),
     email: varchar({ length: 255 }).notNull().unique(),
 });
-//# sourceMappingURL=schema.js.map
